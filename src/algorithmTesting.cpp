@@ -50,7 +50,7 @@ void algorithmTesting::jointStatesCallback(const sensor_msgs::JointState &msg){
 void algorithmTesting::gazeCallback(const gazetool::GazeHyps& msg) {
     
     horGaze = msg.horGaze;
-    verGaze = msg.verGaze;
+    verGaze = -msg.verGaze;
     std::cout << "<----------Gaze callback---------->" << std::endl;
     std::cout << horGaze << std::endl;
     std::cout << verGaze << std::endl;
