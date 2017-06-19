@@ -25,7 +25,7 @@ void algorithmTesting::jointStatesCallback(const sensor_msgs::JointState &msg){
     lwa4p_temp_q = Eigen::MatrixXd::Zero(6, 1);
     
     for (int i = 0; i < 6; i = i + 1){
-        if (std::abs(msg.position[i]) < zeroThreshold)
+        if (std::abs(msg.position[i]) < 0.0001)
             lwa4p_temp_q(i,0) = 0;
         else
             lwa4p_temp_q(i,0) = msg.position[i];
@@ -113,8 +113,8 @@ void algorithmTesting::move(){
         T_bf(1,0) = -1;
         T_bf(2,1) = 1;
         T_bf(0,2) = -1;
-        T_bf(0,3) = 1500; 
-        T_bf(2,3) = 1000;
+        T_bf(0,3) = x0 + d; 
+        T_bf(2,3) = z0;
         T_bf(3,3) = 1;
         
 //         std::cout << "T_bf" << std::endl;
@@ -188,9 +188,9 @@ void algorithmTesting::move(){
             pub_arm_5.publish(goal_q(4,0));
             pub_arm_6.publish(goal_q(5,0));
             std::cout << "Poslao!" << std::endl;
-            movingToPoint = true;
-            goal_q_old = goal_q;
-            firstTime = false;
+//             movingToPoint = true;
+//             goal_q_old = goal_q;
+//             firstTime = false;
         }
  
 /*    }
@@ -227,9 +227,9 @@ void algorithmTesting::initializePosition(){
     Eigen::MatrixXd goal_q, q0;
     bool skip = false;
     
-    goal_w(0,0) = 500;
-    goal_w(1,0) = 0;
-    goal_w(2,0) = 1000;
+    goal_w(0,0) = x0;
+    goal_w(1,0) = y0;
+    goal_w(2,0) = z0;
     goal_w(3,0) = 0;
     goal_w(4,0) = 0;
     goal_w(5,0) = 1;
@@ -271,7 +271,6 @@ void algorithmTesting::run() {
     
     initializePosition();
     
-//     ros::spin();
     ros::Rate r(1);
     while(ros::ok()){
         ros::spinOnce();

@@ -45,14 +45,19 @@ private:
     lwa4p_kinematics kinematic;
     int robot_id = 0; // to choose blue robot (important when loading kinematic parameters)
     
-    Eigen::MatrixXd goal_q_old;
+//     Eigen::MatrixXd goal_q_old;
     Eigen::MatrixXd lwa4p_temp_q;
     
     // Algorithm parameters
-    double d = 1000; // distance from the camera to the observer
+    double d = 500; // distance from the camera to the observer
     float zeroThreshold = 0.001; // margin
-    bool movingToPoint = false; // indicates if a robot is moving towards the point
-    bool firstTime = true; // indicates if the robot is moving first time
+    //bool movingToPoint = false; // indicates if a robot is moving towards the point
+    //bool firstTime = true; // indicates if the robot is moving first time
+    
+    // starting position
+    double x0 = 500;
+    double y0 = 0;
+    double z0 = 1000;
     
     // Gaze data
     double horGaze;
