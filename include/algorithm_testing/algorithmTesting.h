@@ -13,7 +13,6 @@
 
 // user defined
 #include "gazetool/GazeHyps.h"
-#include "schunk_lwa4p_trajectory/WaypointArray.h"
 #include <schunk_lwa4p_kinematics/lwa4p_kinematics.h>
 
 class algorithmTesting

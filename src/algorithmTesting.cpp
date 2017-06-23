@@ -4,7 +4,7 @@ algorithmTesting::algorithmTesting(){
     
     // subscribe to joint states and gaze information
     jointStatesSub = n.subscribe("/lwa4p_blue/joint_states", 1, &algorithmTesting::jointStatesCallback, this);
-    gazeSub = n.subscribe("/gazeHyps_raw", 1, &algorithmTesting::gazeCallback, this);
+    gazeSub = n.subscribe("/gazeHyps_rqt", 1, &algorithmTesting::gazeCallback, this);
     
     // publish commands to the schunk position controllers
     pub_arm_1 = n.advertise<std_msgs::Float64>("lwa4p_blue/arm_1_joint_pos_controller/command", 1);
@@ -25,7 +25,7 @@ void algorithmTesting::jointStatesCallback(const sensor_msgs::JointState &msg){
     lwa4p_temp_q = Eigen::MatrixXd::Zero(6, 1);
     
     for (int i = 0; i < 6; i = i + 1){
-        if (std::abs(msg.position[i]) < 0.0001)
+        if (std::abs(msg.position[i]) < 0.00001)
             lwa4p_temp_q(i,0) = 0;
         else
             lwa4p_temp_q(i,0) = msg.position[i];
@@ -76,20 +76,11 @@ void algorithmTesting::move(){
     // transformation from base to the center of the sphere
     Eigen::MatrixXd T_bf = Eigen::MatrixXd::Zero(4,4);
     
-    T_bf(1,0) = -1;
-    T_bf(2,1) = 1;
-    T_bf(0,2) = -1;
-    T_bf(0,3) = x0 + d; 
-    T_bf(2,3) = z0;
-    T_bf(3,3) = 1;
+    // direct kinematics transformation matrix
+    Eigen::MatrixXd T_06;
+    T_06 = kinematic.directKinematics(lwa4p_temp_q, 6);
     
-    // transformation matrix from the coordinate system of the base to the coordinate system on the sphere
-    Eigen::MatrixXd T;
-    T = T_bf * T_fs;
-    
-    // create input vector for inverse kinematics
-    Eigen::MatrixXd goal_w = Eigen::MatrixXd::Zero(9,1);
-    
+    // transformation to match the orientations
     Eigen::MatrixXd T_orient = Eigen::MatrixXd::Zero(4,4);
     
     T_orient(1,0) = 1;
@@ -97,8 +88,17 @@ void algorithmTesting::move(){
     T_orient(2,2) = -1;
     T_orient(3,3) = 1;
     
+    T_bf = T_06 * T_d * T_orient;
+    
+    // transformation matrix from the coordinate system of the base to the coordinate system on the sphere
+    Eigen::MatrixXd T;
+    T = T_bf * T_fs;
+    
     // final coordinate system orientation, z pointing in the direction opposite of the sphere normal
     T = T * T_orient;
+    
+    // create input vector for inverse kinematics
+    Eigen::MatrixXd goal_w = Eigen::MatrixXd::Zero(9,1);
     
     goal_w(0,0) = T(0,3);
     goal_w(1,0) = T(1,3);
@@ -110,9 +110,7 @@ void algorithmTesting::move(){
     goal_w(7,0) = T(1,2);
     goal_w(8,0) = T(2,2);
     
-    Eigen::MatrixXd goal_q, q0;
-        
-    q0 = Eigen::MatrixXd::Zero(6, 1);
+    Eigen::MatrixXd goal_q;
     
     std::cout << "<----------Tool configuration vector (in mm)---------->" << std::endl;
     std::cout << goal_w << std::endl;
@@ -180,7 +178,7 @@ void algorithmTesting::initializePosition(){
     goal_w(8,0) = 0;
     
     goal_q = kinematic.inverseKinematics(goal_w);
-    std::cout << goal_q << std::endl;
+    //std::cout << goal_q << std::endl;
     
     q0 = Eigen::MatrixXd::Zero(6, 1);
     goal_q = kinematic.inverseKinematics_closestQ(goal_w, q0); // returns closest solution
@@ -215,8 +213,9 @@ void algorithmTesting::run() {
     
     ros::Rate r(1); // rate is set to one because algorithm is tested much easier
     while(ros::ok()){
+
         ros::spinOnce();
-    
+       
         move();
         r.sleep();
     }
