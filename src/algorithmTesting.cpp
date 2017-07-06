@@ -12,8 +12,7 @@ algorithmTesting::algorithmTesting(){
     pub_arm_3 = n.advertise<std_msgs::Float64>("lwa4p_blue/arm_3_joint_pos_controller/command", 1);
     pub_arm_4 = n.advertise<std_msgs::Float64>("lwa4p_blue/arm_4_joint_pos_controller/command", 1);
     pub_arm_5 = n.advertise<std_msgs::Float64>("lwa4p_blue/arm_5_joint_pos_controller/command", 1);
-    pub_arm_6 = n.advertise<std_msgs::Float64>("lwa4p_blue/arm_6_joint_pos_controller/command", 1);
-   
+    pub_arm_6 = n.advertise<std_msgs::Float64>("lwa4p_blue/arm_6_joint_pos_controller/command", 1);   
 }
 
 algorithmTesting::~algorithmTesting(){
@@ -131,13 +130,20 @@ void algorithmTesting::move(){
         }
     }
     
+    goal_q1.data = goal_q(0,0);
+    goal_q2.data = goal_q(1,0);
+    goal_q3.data = goal_q(2,0);
+    goal_q4.data = goal_q(3,0);
+    goal_q5.data = goal_q(4,0);
+    goal_q6.data = goal_q(5,0);
+    
     if (!skip) {
-        pub_arm_1.publish(goal_q(0,0));
-        pub_arm_2.publish(goal_q(1,0));
-        pub_arm_3.publish(goal_q(2,0));
-        pub_arm_4.publish(goal_q(3,0));
-        pub_arm_5.publish(goal_q(4,0));
-        pub_arm_6.publish(goal_q(5,0));
+        pub_arm_1.publish(goal_q1);
+        pub_arm_2.publish(goal_q2);
+        pub_arm_3.publish(goal_q3);
+        pub_arm_4.publish(goal_q4);
+        pub_arm_5.publish(goal_q5);
+        pub_arm_6.publish(goal_q6);
     }
 }
 
@@ -191,13 +197,20 @@ void algorithmTesting::initializePosition(){
         }
     }
     
+    goal_q1.data = goal_q(0,0);
+    goal_q2.data = goal_q(1,0);
+    goal_q3.data = goal_q(2,0);
+    goal_q4.data = goal_q(3,0);
+    goal_q5.data = goal_q(4,0);
+    goal_q6.data = goal_q(5,0);
+    
     if (!skip) {
-        pub_arm_1.publish(goal_q(0,0));
-        pub_arm_2.publish(goal_q(1,0));
-        pub_arm_3.publish(goal_q(2,0));
-        pub_arm_4.publish(goal_q(3,0));
-        pub_arm_5.publish(goal_q(4,0));
-        pub_arm_6.publish(goal_q(5,0));
+        pub_arm_1.publish(goal_q1);
+        pub_arm_2.publish(goal_q2);
+        pub_arm_3.publish(goal_q3);
+        pub_arm_4.publish(goal_q4);
+        pub_arm_5.publish(goal_q5);
+        pub_arm_6.publish(goal_q6);
         std::cout << "In starting position!" << std::endl;
         ros::Duration(5).sleep();
         std::cout << "Ready!" << std::endl;

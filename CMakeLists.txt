@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(algorithm_testing)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
-# add_definitions(-std=c++11)
+add_definitions(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -50,11 +50,11 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
+#add_message_files(
 #   FILES
 #   Message1.msg
 #   Message2.msg
-# )
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -71,10 +71,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
+#generate_messages(
 #   DEPENDENCIES
 #   std_msgs
-# )
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##

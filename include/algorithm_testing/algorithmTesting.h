@@ -45,6 +45,7 @@ private:
     int robot_id = 0; // to choose blue robot (important when loading kinematic parameters)
     
     Eigen::MatrixXd lwa4p_temp_q;
+    std_msgs::Float64 goal_q1, goal_q2, goal_q3, goal_q4, goal_q5, goal_q6;
     
     // Algorithm parameters
     double d = 500; // distance from the camera to the observer
